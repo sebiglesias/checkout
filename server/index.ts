@@ -1,6 +1,6 @@
 import express from "express"
 import { PrismaClient } from '@prisma/client'
-import {Category, Payment} from "./models/models";
+import {Payment} from "./models/models";
 
 const prisma = new PrismaClient()
 const app = express()
@@ -19,22 +19,29 @@ app.post('/orders', async (req, res) => {
     const { store, client, payments, items  } = req.body;
     return prisma.orderHeader.create({
         data: {
-            store,
-            client,
+            store: {
+                connect: { id: store }
+            },
+            client: {
+                connect: { id: client }
+            },
             payments: {
                 create: payments?.map((payment: Payment) => {
-                    return { paymentType: payment.paymentType, ammount: payment.ammount }
+                    return { paymentType: { connect: {id: payment.paymentType }}, ammount: payment.ammount }
                 })
             },
             orderItems: {
                 create: items?.map((item: {id: number, quantity: number}) => {
-                    return { itemId: item.id, quantity: item.quantity }
+                    return { item: { connect: {id: item.id}}, quantity: item.quantity }
                 })
             }
         }
     }).then(order => {
         res.json(order)
-    }).catch(e => res.json(e))
+    }).catch(e => {
+        console.log(e)
+        return res.json(e)
+    })
 })
 
 app.get('/orders', (req, res) => {

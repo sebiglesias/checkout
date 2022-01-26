@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Client {
+  id          Int           @id @default(autoincrement())
+  name        String
+  OrderHeader OrderHeader[]
+}
+
+model Store {
+  id          Int           @id @default(autoincrement())
+  name        String
+  OrderHeader OrderHeader[]
+}
+
+model Category {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  image_id String
+  Item     Item[]
+}
+
+model Item {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  image_id   String
+  category   Category    @relation(fields: [categoryId], references: [id])
+  price      Float
+  OrderItem  OrderItem[]
+  categoryId Int
+}
+
+model PaymentType {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Payment Payment[]
+}
+
+model Payment {
+  id            Int          @id @default(autoincrement())
+  paymentType   PaymentType  @relation(fields: [paymentTypeId], references: [id])
+  ammount       Float
+  paymentTypeId Int
+  OrderHeader   OrderHeader? @relation(fields: [orderHeaderId], references: [id])
+  orderHeaderId Int?
+}
+
+model OrderHeader {
+  id         Int         @id @default(autoincrement())
+  orderItems OrderItem[]
+  payments   Payment[]
+  client     Client      @relation(fields: [clientId], references: [id])
+  store      Store       @relation(fields: [storeId], references: [id])
+  clientId   Int
+  storeId    Int
+}
+
+model OrderItem {
+  id       Int         @id @default(autoincrement())
+  order    OrderHeader @relation(fields: [orderId], references: [id])
+  orderId  Int
+  item     Item        @relation(fields: [itemId], references: [id])
+  itemId   Int
+  quantity Int
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}

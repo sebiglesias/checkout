@@ -1,0 +1,23 @@
+.topBarContainer {
+  display: flex;
+  flex-direction: row;
+  max-height: 50px;
+  min-height: 50px;
+  justify-content: space-between;
+  justify-items: center;
+  align-items: center;
+  padding-left: 50px;
+  padding-right: 50px;
+
+  background-color: gray;
+}
+
+.link {
+  color: white;
+}
+
+.cart {
+  color: red;
+  text-decoration: none;
+  font-weight: bold;
+}

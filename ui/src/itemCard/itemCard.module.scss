@@ -1,0 +1,23 @@
+@import '../common/common.module';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.foodImage {
+  @extend .img
+}
+
+.header {
+  @extend .cardTitle;
+}
+
+.counter {
+  max-width: 200px;
+  min-width: 200px;
+}

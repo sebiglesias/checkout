@@ -18,6 +18,7 @@
   "license": "ISC",
   "repository": "https://github.com/sebiglesias/checkout",
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.12",
     "@types/pg": "^8.6.4",
@@ -27,6 +28,7 @@
   },
   "dependencies": {
     "@prisma/client": "^3.8.1",
+    "cors": "^2.8.5",
     "express": "^4.17.2",
     "nodemon": "^2.0.15",
     "pg": "^8.7.1"

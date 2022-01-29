@@ -15,7 +15,7 @@ export const ItemCard = (prop: ItemCardProps) => {
         <div className={classes.container}>
             <div className={classes.header}>{name}</div>
             <img src={EnvUtil.getImageUrl(image_id)}  alt={"product image"} className={classes.foodImage}/>
-            <div className={classes.counter}><ItemCounter item={prop.item} /></div>
+            <div className={classes.counter}><ItemCounter item={prop.item} canRemove={true}/></div>
         </div>
     )
 }

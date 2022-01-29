@@ -1,3 +1,40 @@
 .container {
+  border: 1px solid #e6e6e6;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  input {
+    width: 50px;
+    font-size: 17px;
+    box-shadow: none;
+    display: block;
+    text-align: center;
+    border: 0;
+  }
+}
 
+.disabledButton {
+  cursor: not-allowed;
+  color: grey;
+}
+
+.noStyleButton {
+    background: none;
+    color: inherit;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    padding:15px;
+    font-size: 17px;
+}
+
+.clearButton {
+  margin-left: 10px;
 }

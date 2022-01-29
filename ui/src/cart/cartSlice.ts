@@ -16,11 +16,8 @@ const slice = createSlice({
             if (quantity === 0) {
                 state.items = [...removeItemFromArray(item.id, state.items)]
             } else if(quantity > 0) {
-                console.log({item})
-                console.log(quantity)
                 const existingItemIndex = state.items.findIndex(cartItem => cartItem.item.id === item.id);
                 const auxArray = [...state.items]
-                console.log(auxArray)
                 existingItemIndex >= 0 ?
                     auxArray[existingItemIndex].quantity = quantity : auxArray.push({ item, quantity} as CartItem)
                 state.items = [...auxArray]

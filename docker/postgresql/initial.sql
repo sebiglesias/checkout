@@ -26,3 +26,7 @@ values (1, 'Main');
 
 Insert into "Client" (id, name)
 values (1, 'Only');
+
+Insert into "OrderHeaderState" (id, name)
+values (0, 'WAITING_FOR_PAYMENT'),
+    (1, 'PAYED');

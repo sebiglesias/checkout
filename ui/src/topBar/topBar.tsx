@@ -9,7 +9,13 @@ import {useSelector} from "react-redux";
 import {AppState} from "../store";
 import {useMemo} from "react";
 
-export const TopBar = () => {
+export type TopBarProps = {
+    withSearch: boolean
+    withCart: boolean
+}
+
+export const TopBar = (props: TopBarProps) => {
+    const {withSearch, withCart} = props
     const {items} = useSelector((state: AppState) => state.cart)
 
     const count = useMemo(() => {
@@ -23,8 +29,8 @@ export const TopBar = () => {
     return (
         <div className={classes.topBarContainer}>
             <Link to={Routes.home} className={classes.link}>SebCheckout</Link>
-            <SearchBar />
-            <Link to={Routes.cart} className={classes.cart}><FontAwesomeIcon icon={faShoppingCart} color={'white'}/>{count}</Link>
+            {withSearch && <SearchBar />}
+            {withCart && <Link to={Routes.cart} className={classes.cart}><FontAwesomeIcon icon={faShoppingCart} color={'white'}/>{count}</Link>}
         </div>
     )
 }

@@ -8,6 +8,13 @@ import {useGetItems} from "./catalogue/hooks/useGetItems";
 import {useGetCategories} from "./catalogue/hooks/useGetCategories";
 
 import classes from "./App.module.scss"
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {Payment} from "./payment/payment";
+import {OrderPage} from "./order/orderPage";
+import {CartPage} from "./cart/cartPage";
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const App: React.FC = () => {
     const {categories, items, selectedCategory} = useSelector((state: AppState) => state.catalogue)
@@ -23,8 +30,30 @@ export const App: React.FC = () => {
 
     return (
         <div className={classes.container}>
-            <TopBar/>
-            <Catalogue categories={categories} items={items} selectedCategory={selectedCategory}/>
+            <ToastContainer/>
+            <BrowserRouter>
+                <>
+
+                </>
+                {/*Could probably use a wrapper component with the TopBat to put the navbar everywhere, but i'll see if i can do it on another iteration*/}
+                <Routes>
+                    <Route path="/" element={
+                        <>
+                            <TopBar withCart={true} withSearch={true} />
+                            <Catalogue categories={categories} items={items} selectedCategory={selectedCategory}/>
+                        </>
+                    }
+                    />
+                    <Route path="/cart" element={
+                        <>
+                            <TopBar withSearch={false} withCart={true} />
+                            <CartPage />
+                        </>
+                    } />
+                    <Route path="/order" element={<OrderPage />} />
+                    <Route path="/payment" element={<Payment />} />
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 }

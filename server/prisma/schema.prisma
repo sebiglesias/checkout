@@ -49,14 +49,22 @@ model Payment {
   orderHeaderId Int?
 }
 
+model OrderHeaderState {
+  id          Int           @id @default(autoincrement())
+  name        String
+  OrderHeader OrderHeader[]
+}
+
 model OrderHeader {
-  id         Int         @id @default(autoincrement())
-  orderItems OrderItem[]
-  payments   Payment[]
-  client     Client      @relation(fields: [clientId], references: [id])
-  store      Store       @relation(fields: [storeId], references: [id])
-  clientId   Int
-  storeId    Int
+  id                 Int              @id @default(autoincrement())
+  orderItems         OrderItem[]
+  payments           Payment[]?
+  client             Client           @relation(fields: [clientId], references: [id])
+  store              Store            @relation(fields: [storeId], references: [id])
+  state              OrderHeaderState @relation(fields: [orderHeaderStateId], references: [id])
+  clientId           Int
+  storeId            Int
+  orderHeaderStateId Int
 }
 
 model OrderItem {
@@ -66,6 +74,7 @@ model OrderItem {
   item     Item        @relation(fields: [itemId], references: [id])
   itemId   Int
   quantity Int
+  price    Int
 }
 
 datasource db {

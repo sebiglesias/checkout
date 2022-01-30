@@ -2,6 +2,11 @@
 
 Full-Stack Mashgin Take Home Assignment Restaurant Checkout
 
+
+https://user-images.githubusercontent.com/13668861/151705776-497baca9-422e-48f2-af18-8cf3d82b9c91.mov
+
+
+
 ## Description
 
 ### Goal

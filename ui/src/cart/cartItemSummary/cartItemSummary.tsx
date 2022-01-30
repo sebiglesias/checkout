@@ -13,8 +13,7 @@ export type CartItemProp = {
 
 export const CartItemSummary = (props: CartItemProp) => {
     const dispatch = useDispatch()
-    const {cartItem} = props
-
+    const {cartItem, readOnly} = props
     const removeFromCart = useCallback(() => {
         dispatch(removeItem(cartItem.item.id))
     }, [cartItem.item.id])
@@ -26,10 +25,10 @@ export const CartItemSummary = (props: CartItemProp) => {
                 <div className={classes.info}>
                     <div className={classes.name}>{cartItem.item.name}</div>
                     <div>${cartItem.item.price}</div>
-                    <div className={classes.remove} onClick={removeFromCart}>Remove Product</div>
+                    {!readOnly && <div className={classes.remove} onClick={removeFromCart}>Remove Product</div>}
                 </div>
                 <ItemCounter item={cartItem.item} canRemove={false} readOnly={props.readOnly}/>
-                <div>${(parseFloat(cartItem.item.price) * cartItem.quantity).toFixed(2)}</div>
+                <div>${(cartItem.item.price * cartItem.quantity).toFixed(2)}</div>
             </div>
         </div>
     )

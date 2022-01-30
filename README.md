@@ -40,18 +40,81 @@ performance improvements for that matter. Its objective is to be something bette
 
 ## Build
 
-TO BE DONE
- // I aim to have one docker file for the client and another one for the server and run them both with a docker-compose file.
-Publishing the images to dockerhub may be considered. Having a unix setup with docker & docker compose installed may be necessary.
-In any case, I will leave the commands to setup and run the environment locally outside a docker container as well.
+### Build the UI
 
+**Disclaimer**: I have a macOs laptop, so running and installing some libraries may differ in a different OS.
+
+I personally like to use [nvm](https://github.com/nvm-sh/nvm) to handle node version
+
+```bash
+nvm use v16.13.2
+```
+
+or install node v16.13.2 from package manager of choice
+
+``` bash
+cd ui
+# install the dependencies (make sure you are using the right node version)
+npm install
+npm run build 
+```
+The contents of the `/build` directory
+
+### Start the UI
+
+After the build process, run: 
+```bash
+npm run start
+```
+and it will run the app in `http://localhost:3000` that you can access from your browser of choice 
+(only tested and developed in Chrome, so Chrome is recommended).
+
+### Build the Server
+
+There's a docker compose file inside `docker/postgresql` that will launch a postgresql database with a specific user and password.
+To run the docker-compose file you will need to have docker-compose installed, here's a [guide](https://docs.docker.com/compose/install/) if needed.
+
+```bash
+cd docker/postgresql
+docker-compose up
+```
+
+Now that the database is up and running, if no tables exist, we need to run some commands form the server's ORM to generate the tables.
+
+```bash
+# inside server directory
+npx prisma migrate dev --name "init" --preview-feature
+```
+
+The example data was transformed into sql queries, the `inital.sql` has them. You can execute them from your db visualizer of choice,
+here are the commands to connect to the docker image from the terminal and run those queries:
+
+```bash
+# postgresql_postgres_1 is the image's name, it might differ, you can check running docker instances with `docker ps`
+docker exec -it postgresql_postgres_1 sh
+# check credentials in the docker compose file, the database name is `test`
+psql -U postgres test
+# copy and paste the commands and run them through
+```
+
+Congrats, you have a db up and running with data.
+
+From the repository root run the following commands to start the express server:
+
+```bash
+cd server
+npm run start:dev
+```
 
 ## Test
 
-TO BE DONE
+I didn't have much time to work over this during the weekend as I expected, I won't add any tests. I would only have some time to add
+pointless unit tests. For that I am sorry, but I've tried out different aspects from the app manually, and the base happy path works.
 
 ## Worth mentioning comments
 
 I will try to make commits as descriptive as possible, but in some case I might need to further explain my thinking 
 process I will be using the `docs/logs` directory. There I *might* put markdown files explaining any weird reasoning I 
 may stumble upon or think. FYI, I never use that kind of documentation "log", this is only a thing for this interview scenario.
+
+Please read those, I put a lot of love into them. Have a nice day.

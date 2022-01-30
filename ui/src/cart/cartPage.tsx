@@ -1,5 +1,5 @@
 import classes from './cartPage.module.scss'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../store";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {CartItemSummary} from "./cartItemSummary/cartItemSummary";
@@ -7,10 +7,11 @@ import { useNavigate} from "react-router-dom";
 import {Routes} from "../routes";
 import {usePostOrderWaitingForPayment} from "../order/hooks/usePostOrderWaitingForPayment";
 import {toast} from "react-toastify";
-
+import {addWaitingForPaymentOrder} from "../order/orderSlice";
 
 export const CartPage = () => {
     const [ totalPrice, setTotalPrice ] = useState(0)
+    const dispatch = useDispatch()
     const { items } = useSelector((state: AppState) => state.cart)
     const orderHook = usePostOrderWaitingForPayment()
 
@@ -19,7 +20,7 @@ export const CartPage = () => {
 
     useEffect(() => {
         let count = 0
-        items.forEach(item => count += parseFloat(item.item.price) * item.quantity)
+        items.forEach(item => count += item.item.price * item.quantity)
         setTotalPrice(count)
     }, [items, setTotalPrice])
 
@@ -30,10 +31,9 @@ export const CartPage = () => {
     const sendOrder = useCallback( () => {
         orderHook(items)
         .then((response) => {
-                console.log(response)
-                navigate(Routes.payment, {replace: true})
-            }
-        ).catch(e => {
+            dispatch(addWaitingForPaymentOrder(response))
+            navigate(Routes.payment, {replace: true})
+        }).catch(e => {
             toast.error("There was a problem registering your order try again.")
             console.log(e)
         })
@@ -46,7 +46,7 @@ export const CartPage = () => {
                 {itemList}
             </div>
             <div className={classes.bottomBar}>
-                <span>Total: ${totalPrice}</span>
+                <span>Total: ${totalPrice.toFixed(2)}</span>
                 <button disabled={totalPrice === 0} onClick={sendOrder}>Pay</button>
             </div>
         </div>

@@ -25,6 +25,9 @@ const slice = createSlice({
         },
         removeItem(state, {payload}: PayloadAction<string>) {
             state.items = [...removeItemFromArray(payload, state.items)]
+        },
+        clearCart(state) {
+            state.items = []
         }
     }
 })
@@ -35,11 +38,9 @@ const slice = createSlice({
  * @param array
  */
 const removeItemFromArray = (id: string, array: CartItem[]): CartItem[] => {
-    const existingItemIndex = array.findIndex(cartItem => cartItem.item.id === id);
-    if (existingItemIndex >= 0) array = array.splice(existingItemIndex, existingItemIndex)
-    return array
+    return array.filter(cartItem => cartItem.item.id !== id);
 }
 
-export const {addItem, removeItem} = slice.actions
+export const {addItem, removeItem, clearCart} = slice.actions
 
 export default slice.reducer

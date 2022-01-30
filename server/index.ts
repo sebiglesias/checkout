@@ -2,12 +2,15 @@ import express from "express"
 import { PrismaClient } from '@prisma/client'
 import {Payment} from "./models/models";
 
+import cors from 'cors'
+
 const prisma = new PrismaClient()
 const app = express()
 
 const port = process.env.PORT || 8080
 
 app.use(express.json())
+app.use(cors())
 
 // endpoints
 app.get('/menu', async (req, res) => {
@@ -27,12 +30,10 @@ app.get('/categories', async (req, res) => {
  * steps, check the docs/logs/01-29-2022.md file.
  */
 app.post('/orders', async (req, res) => {
-    const { id, orderHeaderStateId, store, client, payments, items  } = req.body;
     res.setHeader("Access-Control-Allow-Origin", "*")
+    const { id, orderHeaderStateId, store, client, payments, items  } = req.body;
     // In a real life scenario I would never pass a text coming from a client directly to a search in the db, a sanitization
-    // should be performed but it out-scopes this project a bit I believe. Nor the use of an await on an api, its just so as to not
-    // make a hard to understand code for this endpoint by making a long line of promises
-
+    // should be performed but it out-scopes this project a bit I believe.
     // Would perform some validations for each item, so as not to trust the price that comes from the client-side, as it may be tampered.
     // but due to time constraints I won't do so. They would require to search each item id in the database and use the values coming
     // from it as real
@@ -46,14 +47,9 @@ app.post('/orders', async (req, res) => {
                 client: {
                     connect: { id: client }
                 },
-                payments: {
-                    create: payments?.map((payment: Payment) => {
-                        return { paymentType: { connect: {id: payment.paymentType }}, ammount: payment.ammount }
-                    })
-                },
                 orderItems: {
-                    create: items?.map((item: {id: number, quantity: number}) => {
-                        return { item: { connect: {id: item.id}}, quantity: item.quantity }
+                    create: items?.map((item: {id: number, quantity: number, price: number}) => {
+                        return { item: { connect: {id: item.id}}, quantity: item.quantity, price: item.price }
                     })
                 },
                 state: {
@@ -61,7 +57,14 @@ app.post('/orders', async (req, res) => {
                 }
             }
         }).then(order => {
-            res.json(order)
+            return prisma.orderHeader.findFirst({
+                where: {
+                    id: order.id
+                },
+                include: {
+                    orderItems: true
+                },
+            }).then(result => res.json(result))
         }).catch(e => {
             console.log(e)
             return res.json(e)
@@ -83,7 +86,15 @@ app.post('/orders', async (req, res) => {
                 }
             }
         }).then(order => {
-            res.json(order)
+            return prisma.orderHeader.findFirst({
+                where: {
+                    id: order.id
+                },
+                include: {
+                    payments: true,
+                    orderItems: true
+                },
+            }).then(result => res.json(result))
         }).catch(e => {
             console.log(e)
             return res.json(e)
@@ -92,6 +103,7 @@ app.post('/orders', async (req, res) => {
 })
 
 app.get('/orders', (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*")
     prisma.orderHeader.findMany().then(orders => res.json(orders)).catch(e => res.json(e))
 })
 

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import './App.module.scss';
 import {Catalogue} from "./catalogue/catalogue";
 import {TopBar} from "./topBar/topBar";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "./store";
 import {useGetItems} from "./catalogue/hooks/useGetItems";
 import {useGetCategories} from "./catalogue/hooks/useGetCategories";
@@ -13,18 +13,22 @@ import {Payment} from "./payment/payment";
 import {OrderPage} from "./order/orderPage";
 import {CartPage} from "./cart/cartPage";
 
-import { ToastContainer } from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {addCategories, addItems} from "./catalogue/catalogueSlice";
 
 export const App: React.FC = () => {
     const {categories, items, selectedCategory} = useSelector((state: AppState) => state.catalogue)
     const getItems = useGetItems()
     const getCategories = useGetCategories()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (items.length === 0 && categories.length === 0) {
-            getItems().then().catch(e=> console.log(e))
-            getCategories().then().catch(e=> console.log(e))
+            getItems().then((its) => dispatch(addItems(its)))
+                .catch(e=> toast.error('There was a problem getting the product categories, try refreshing the page.'))
+            getCategories().then((cats) => dispatch(addCategories(cats)))
+                .catch(e=> toast.error("There was a problem getting the product categories, try refreshing the page."))
         }
     }, [categories, items])
 

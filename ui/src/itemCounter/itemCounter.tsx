@@ -15,7 +15,7 @@ export const ItemCounter = (props: ItemCounterProps) => {
     const quantity = useGetItemQuantity(props.item.id)
     const dispatch = useDispatch()
     const addItemWithInputQuantity = useCallback((event) => {
-        dispatch(addItem({item: props.item, quantity: event.target.value}))
+        dispatch(addItem({item: props.item, quantity: parseInt(event.target.value)}))
     }, [props.item])
 
     const removeSingleItem = useCallback(() => {
@@ -35,11 +35,9 @@ export const ItemCounter = (props: ItemCounterProps) => {
     //     dispatch(removeItem(props.item.id))
     // }, [props.item, quantity])
 
-    const minusStyle = `${classes.noStyleButton} ${!props.canRemove && quantity() === 1 && classes.noStyleButton}`
-
     return (
         <div className={classes.container}>
-            <button onClick={removeSingleItem} className={minusStyle} disabled={props.readOnly}>-</button>
+            <button onClick={removeSingleItem} className={classes.noStyleButton} disabled={props.readOnly || !props.canRemove && quantity() === 1}>-</button>
             <input type={'number'} value={quantity()} onChange={addItemWithInputQuantity} disabled={props.readOnly}/>
             <button onClick={addSingleItem} className={classes.noStyleButton} disabled={props.readOnly}>+</button>
             {/*<button onClick={clearItem} className={classes.clearButton}>Clear All</button>*/}

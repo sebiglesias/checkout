@@ -33,7 +33,9 @@ export class ItemsApi {
                         // fixed mocked values to show possible extensions to this implementation
                         store: 1,
                         client: 1,
-                        items: items,
+                        items: items.map(item => {
+                            return {id: item.item.id, quantity: item.quantity, price: item.item.price}
+                        }),
                         orderHeaderStateId: OrderHeaderState.WAITING_FOR_PAYMENT
                     }),
                     headers: {
@@ -41,12 +43,15 @@ export class ItemsApi {
                     }
             })
             .then(response => response.json())
-            .then(data => {
-                return data
-            });
+            .then((data) => {
+                return {
+                        ...data,
+                        items: data.orderItems,
+                    }
+                })
     }
 
-    postAfterPaymentOrder(id: string): Promise<Order> {
+    postAfterPaymentOrder(id: string, totalPrice: number): Promise<Order> {
         return fetch(
             this.baseUrl + 'orders',
             {
@@ -57,8 +62,8 @@ export class ItemsApi {
                     // depending on a paymentType it may differ due to taxes or extra costs. But for this case, I will only
                     // use the price coming from the items.
                     payments: [{
-                        paymentType: 0,
-                        paymentAmount: 0
+                        paymentType: 1,
+                        ammount: totalPrice
                     }]
                 }),
                 headers: {
@@ -67,7 +72,10 @@ export class ItemsApi {
             })
             .then(response => response.json())
             .then(data => {
-                return data
-            });
+                return {
+                        ...data,
+                        items: data.orderItems,
+                }
+            })
     }
 }

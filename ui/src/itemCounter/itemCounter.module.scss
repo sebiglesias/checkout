@@ -16,10 +16,14 @@
     display: block;
     text-align: center;
     border: 0;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 }
 
-.disabledButton {
+button:disabled {
   cursor: not-allowed;
   color: grey;
 }

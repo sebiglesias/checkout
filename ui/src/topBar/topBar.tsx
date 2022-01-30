@@ -3,7 +3,7 @@ import classes from './topBar.module.scss'
 import {Link} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
-import {SearchBar} from "../searchBar/searchBar";
+// import {SearchBar} from "../searchBar/searchBar";
 import {Routes} from "../routes";
 import {useSelector} from "react-redux";
 import {AppState} from "../store";
@@ -29,7 +29,7 @@ export const TopBar = (props: TopBarProps) => {
     return (
         <div className={classes.topBarContainer}>
             <Link to={Routes.home} className={classes.link}>SebCheckout</Link>
-            {withSearch && <SearchBar />}
+            {/*{withSearch && <SearchBar />}*/}
             {withCart && <Link to={Routes.cart} className={classes.cart}><FontAwesomeIcon icon={faShoppingCart} color={'white'}/>{count}</Link>}
         </div>
     )

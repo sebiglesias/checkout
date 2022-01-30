@@ -58,7 +58,7 @@ model OrderHeaderState {
 model OrderHeader {
   id                 Int              @id @default(autoincrement())
   orderItems         OrderItem[]
-  payments           Payment[]?
+  payments           Payment[]
   client             Client           @relation(fields: [clientId], references: [id])
   store              Store            @relation(fields: [storeId], references: [id])
   state              OrderHeaderState @relation(fields: [orderHeaderStateId], references: [id])
@@ -74,7 +74,7 @@ model OrderItem {
   item     Item        @relation(fields: [itemId], references: [id])
   itemId   Int
   quantity Int
-  price    Int
+  price    Float
 }
 
 datasource db {

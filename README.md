@@ -72,8 +72,7 @@ more than happy to discuss other UI component directory arrangements.
 
 #### Express Xapi
 
-Inside the `server` directory, I will be using a simple express js server. (All my instincts are telling me to use java 
-+ spring, but as Node & Python are the technologies used in Mashgin I'll use Node. I have experience with express
+Inside the `server` directory, I will be using a simple express js server. (All my instincts are telling me to use java + spring, but as Node & Python are the technologies used in Mashgin I'll use Node. I have experience with express
 as a node server for internal tooling and none with python as a REST client). 
 
 A postgresql instance will be used to store the information with rather simple tables. No database versioning system will be
